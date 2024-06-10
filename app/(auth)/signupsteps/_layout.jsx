@@ -9,21 +9,7 @@ const SignUpStepLayout = () => {
       <StatusBar style="light" backgroundColor="black" translucent={false}/>
       <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen 
-            name="stepone"
-            options={{
-              headerShown: false
-            }}
-          />
-
-          <Stack.Screen 
-            name="steptwo"
-            options={{
-              headerShown: false
-            }}
-          />
-
-          <Stack.Screen 
-            name="stepthree"
+            name="onboarding"
             options={{
               headerShown: false
             }}

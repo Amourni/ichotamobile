@@ -25,7 +25,7 @@ const LoginReady = () => {
             <View style={{ marginBottom: 16 }}>
               <CustomButton 
                 title="Let's go!"
-                handlePress={() => router.push('/signupsteps/stepone')}
+                handlePress={() => router.push('/signupsteps/onboarding')}
                 iconSource={icons.rightArrow}
                 containerStyles="w-full self-end mb-4"
               />
