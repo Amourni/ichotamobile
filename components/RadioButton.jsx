@@ -24,7 +24,7 @@ const RadioButton = ({ selected, onPress, label }) => (
         />
         )}
         </View>
-    <Text style={{ color: '#fff' }}>{label}</Text>
+    <Text className="text-base text-gray-100 font-medium">{label}</Text>
   </TouchableOpacity>
 );
 

@@ -8,6 +8,7 @@ export const memberQuestions = [
     displayType: "text",
     required: true,
     question: "First Name",
+    placeholder: "e.g John"
   },
   {
     id: "2",
@@ -17,6 +18,7 @@ export const memberQuestions = [
     displayType: "text",
     required: true,
     question: "Last Name",
+    placeholder: "e.g Doe"
   },
   {
     id: "3",
@@ -25,6 +27,7 @@ export const memberQuestions = [
     pageOrder: 3,
     displayType: "text",
     question: "Other Names or Alias",
+    placeholder: "Fill in any name that you go by or gone by"
   },
   {
     id: "4",
@@ -69,8 +72,8 @@ export const memberQuestions = [
     displayType: "radio-single",
     question: "If Yes, select previous Gender",
     options: [
-        { label: 'Male', value: 'male' },
-        { label: 'Female', value: 'female' },
+        { label: 'Male', value: 'maleprev' },
+        { label: 'Female', value: 'femaleprev' },
       ]
   },
   {
@@ -96,24 +99,24 @@ export const memberQuestions = [
     section: "Section 1 - Personal Details",
     page: 3,
     pageOrder: 3,
-    displayType: "text-select",
+    displayType: "text",
     required: true,
-    question: "City",
+    question: "What city do you currently reside?",
   },
   {
     id: "11",
     section: "Section 1 - Personal Details",
     page: 3,
     pageOrder: 4,
-    displayType: "text-select",
+    displayType: "select",
     required: true,
     question: "Length of Residency",
     options: [
-      "< 1 month",
-      "1 month to 6 months",
-      "6 months to 1 year",
-      "1 year to 3 years",
-      "> 3 years",
+        { label: "< 1 month", value: "< 1 month" },
+        { label: "1 month to 6 months", value: "1 month to 6 months" },
+        { label: "6 months to 1 year", value: "6 months to 1 year" },
+        { label: "1 year to 3 years", value: "1 year to 3 years" },
+        { label: "> 3 years", value: "> 3 years" },
     ],
   },
   {
@@ -124,25 +127,34 @@ export const memberQuestions = [
     displayType: "radio-single",
     required: true,
     question: "Are you very religious or more spiritual",
-    options: ["Spritual", "Religious", "Both", "I do not care"],
+    options: [
+        { label: 'Spiritual', value: 'spiritual' },
+        { label: 'Religious', value: 'religious' },
+        { label: 'Both', value: 'both' },
+        { label: 'I do not care', value: 'i do not care' },
+    ]
   },
   {
     id: "13",
     section: "Section 1 - Personal Details",
     page: 4,
     pageOrder: 2,
-    displayType: "select",
+    displayType: "text",
     required: true,
-    question: "Select Religion",
+    question: "What is your religion?",
   },
   {
     id: "14",
     section: "Section 1 - Personal Details",
     page: 4,
     pageOrder: 3,
-    displayType: "yes-no",
+    displayType: "radio-single",
     required: true,
     question: "Are you open to dating outside your religion",
+    options: [
+        { label: 'Yes', value: 'yes' },
+        { label: 'No', value: 'no' },
+      ]
   },
   {
     id: "15",
@@ -153,13 +165,13 @@ export const memberQuestions = [
     required: true,
     question: "What's Your Racial Identity",
     options: [
-      "American Indian/Alaska Native",
-      "Asian",
-      "Black or African American",
-      "Native Hawaiian or other Pacific Islander",
-      "Other - Not listed",
-      "White/Caucasian",
-      "Decline to Respond",
+        { label: "American Indian/Alaska Native", value: "american indian/alaska native" },
+        { label: "Asian", value: "asian" },
+        { label: "Black or African American", value: "black or african american" },
+        { label: "Native Hawaiian or other Pacific Islander", value: "native hawaiian or other pacific islander" },
+        { label: "Other - Not listed", value: "other - not listed" },
+        { label: "White/Caucasian", value: "white/caucasian" },
+        { label: "Decline to Respond", value: "decline to respond" },
     ],
   },
   {
@@ -167,9 +179,13 @@ export const memberQuestions = [
     section: "Section 1 - Personal Details",
     page: 5,
     pageOrder: 2,
-    displayType: "yes-no",
+    displayType: "radio-single",
     required: true,
     question: "Are you open to dating outside your race",
+    options: [
+        { label: 'Yes', value: 'yes' },
+        { label: 'No', value: 'no' },
+      ]
   },
   {
     id: "17",
@@ -179,25 +195,33 @@ export const memberQuestions = [
     displayType: "select",
     required: true,
     question: "Select Genotype",
-    options: ["AA", "AC", "AS", "SC", "SS"],
+    options: [
+        { label: 'AA', value: 'AA' },
+        { label: 'AC', value: 'AC' },
+        { label: 'AS', value: 'AS' },
+        { label: 'SC', value: 'SC' },
+        { label: 'SS', value: 'SS' },
+    ]
   },
   {
     id: "18",
     section: "Section 1 - Personal Details",
     page: 6,
     pageOrder: 1,
-    displayType: "text-select",
+    displayType: "text",
     required: true,
-    question: "Select Height",
+    question: "What is your height(cm)",
+    placeholder: "e.g 180cm"
   },
   {
     id: "19",
     section: "Section 1 - Personal Details",
     page: 6,
     pageOrder: 2,
-    displayType: "text-select",
+    displayType: "text",
     required: true,
     question: "Estimated Weight",
+    placeholder: "e.g 80kg or 176bs"
   },
   {
     id: "20",
@@ -207,7 +231,14 @@ export const memberQuestions = [
     displayType: "radio-single",
     required: true,
     question: "What would you say is your body type",
-    options: ["Average", "Skinny", "Curvy", "Athletic", "Thick", "Muscular"],
+    options: [
+        { label: 'Average', value: 'average' },
+        { label: 'Skinny', value: 'skinny' },
+        { label: 'Curvy', value: 'curvy' },
+        { label: 'Athletic', value: 'athletic' },
+        { label: 'Thick', value: 'thick' },
+        { label: 'Muscular', value: 'muscular' },
+    ]
   },
   {
     id: "21",

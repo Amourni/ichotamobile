@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, Image, Button, Modal } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,20 +7,48 @@ import RadioButton from '../../../components/RadioButton';
 import CustomButton from '../../../components/CustomButton';
 import { memberQuestions } from '../../../preload/questions.seed';
 import FormField from '../../../components/FormField';
+import IchDropdown from '../../../components/IchDropdown';
 import { icons, images } from '../../../constants';
+import getCountries from '../../../api/CountryService';
 
 const StepOne = ({ router }) => {
 
   const initialFormState = {
     '5': 'male', // Default selected value for the gender question
     '6': 'yes',
-    '7': 'male',
   };
+
+
+ 
 
   const [form, setForm] = useState(initialFormState);
   const [currentPage, setCurrentPage] = useState(1); // State to track the current page
   const [showPicker, setShowPicker] = useState(false); // State for showing date picker
   const [date, setDate] = useState(new Date()); // State for selected date
+  const [value, setValue] = useState(null);
+  const [countries, setCountries] = useState([]);
+
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const data = await getCountries();
+        // Transform data to include label and value fields
+
+        const transformedData = data.map(country => ({
+          label: country.name?.common || 'Unknown',
+          value: country.cca3 || 'N/A'
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label));
+        setCountries(transformedData);
+      } catch (error) {
+        console.error(error);
+      } 
+    };
+
+    fetchCountries();  
+  }, []);
+  
+
 
   // Function to handle input change and update form state
   const handleChange = (fieldName, value) => {
@@ -98,18 +126,48 @@ const StepOne = ({ router }) => {
               <Text className="text-base text-gray-100 font-medium pb-2">{question.question}</Text>
               <View style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
                 {question.options.map((option, idx) => (
-                  <RadioButton
-                    key={idx}
-                    selected={form[question.id] === option.value}
-                    onPress={() => handleChange(question.id, option.value)}
-                    label={option.label}
-                  />
+                    <RadioButton
+                      key={idx}
+                      selected={form[question.id] === option.value}
+                      onPress={() => handleChange(question.id, option.value)}
+                      label={option.label}
+                    />
                 ))}
               </View>
             </View>
         );
-        
           break;
+
+          case 'text-select':
+            formFieldComponent = (
+              <View key={index} style={{ marginTop: 20 }}>
+              <Text className="text-base text-gray-100 font-medium pb-2">{question.question}</Text>
+              <View style={{ flexDirection: 'column', alignItems: 'flex-start', width: '100%' }}>
+                <IchDropdown
+                  data={countries}
+                  value={form[question.id]}
+                  onChange={(item) => handleChange(question.id, item.value)}
+                />
+              </View>
+            </View>
+        );
+
+        break;
+
+        case 'select':
+          formFieldComponent = (
+            <View key={index} style={{ marginTop: 20 }}>
+            <Text className="text-base text-gray-100 font-medium pb-2">{question.question}</Text>
+            <View style={{ flexDirection: 'column', alignItems: 'flex-start', width: '100%' }}>
+            <IchDropdown
+              data={question.options}
+              value={form[question.id]}
+              onChange={(item) => handleChange(question.id, item.value)}
+            />
+            </View>
+          </View>
+        );
+        break;
 
         default:
           break;
