@@ -27,6 +27,8 @@ const StepOne = ({ router }) => {
   const [date, setDate] = useState(new Date()); // State for selected date
   const [value, setValue] = useState(null);
   const [countries, setCountries] = useState([]);
+  const [yearslist, setYearsList] = useState([]);
+  const [currencies, setCurrencies] = useState([]);
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -34,18 +36,41 @@ const StepOne = ({ router }) => {
         const data = await getCountries();
         // Transform data to include label and value fields
 
-        const transformedData = data.map(country => ({
-          label: country.name?.common || 'Unknown',
-          value: country.cca3 || 'N/A'
+        const transformedCountries = data.map(country => ({
+          label: country.name,
+          value: country.code
         }))
         .sort((a, b) => a.label.localeCompare(b.label));
-        setCountries(transformedData);
+
+        const transformedCurrencies = data.flatMap(country => country.currencies)
+          .filter((currency, index, self) => 
+            index === self.findIndex(c => c.code === currency.code)
+          )
+          .map(currency => ({
+            label: `${currency.name} (${currency.symbol})`,
+            value: currency.code
+          }))
+          .sort((a, b) => a.label.localeCompare(b.label));
+
+        setCountries(transformedCountries);
+        setCurrencies(transformedCurrencies);
+
       } catch (error) {
         console.error(error);
       } 
     };
 
-    fetchCountries();  
+    const generateYears = () => {
+      const currentYear = new Date().getFullYear();
+      const yearOptions = [];
+      for (let year = currentYear; year >= 1900; year--) {
+        yearOptions.push({ label: `${year}`, value: `${year}` });
+      }
+      setYearsList(yearOptions);
+    };
+
+    fetchCountries(); 
+    generateYears(); 
   }, []);
   
 
@@ -121,17 +146,20 @@ const StepOne = ({ router }) => {
           break;
 
         case 'radio-single':
+          const isTwoColumnLayout = question.options.length > 4;
             formFieldComponent = (
-              <View key={index} style={{ marginTop: 20 }}>
+              <View key={index} style={{ marginTop: 10 }}>
               <Text className="text-base text-gray-100 font-medium pb-2">{question.question}</Text>
-              <View style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+              <View style={{ flexDirection: isTwoColumnLayout ? 'row' : 'column', flexWrap: 'wrap' }}>
                 {question.options.map((option, idx) => (
+                  <View key={idx} style={{ flexBasis: isTwoColumnLayout ? '50%' : '100%', paddingRight: 15 }}>
                     <RadioButton
                       key={idx}
                       selected={form[question.id] === option.value}
                       onPress={() => handleChange(question.id, option.value)}
                       label={option.label}
                     />
+                    </View>
                 ))}
               </View>
             </View>
@@ -140,7 +168,7 @@ const StepOne = ({ router }) => {
 
           case 'text-select':
             formFieldComponent = (
-              <View key={index} style={{ marginTop: 20 }}>
+              <View key={index} style={{ marginTop: 10 }}>
               <Text className="text-base text-gray-100 font-medium pb-2">{question.question}</Text>
               <View style={{ flexDirection: 'column', alignItems: 'flex-start', width: '100%' }}>
                 <IchDropdown
@@ -169,11 +197,49 @@ const StepOne = ({ router }) => {
         );
         break;
 
+        case 'years':
+          formFieldComponent = (
+            <View key={index} style={{ marginTop: 20 }}>
+            <Text className="text-base text-gray-100 font-medium pb-2">{question.question}</Text>
+            <View style={{ flexDirection: 'column', alignItems: 'flex-start', width: '100%' }}>
+            <IchDropdown
+              data={yearslist}
+              value={form[question.id]}
+              onChange={(item) => handleChange(question.id, item.value)}
+            />
+            </View>
+          </View>
+        );
+        break;
+
+        case 'currency':
+          formFieldComponent = (
+            <View key={index} style={{ marginTop: 20 }}>
+              <Text className="text-base text-gray-100 font-medium pb-2">{question.question}</Text>
+              <View style={{ flexDirection: 'column', alignItems: 'flex-start', width: '100%' }}>
+                <IchDropdown
+                  data={currencies}
+                  value={form[question.id]}
+                  onChange={(item) => handleChange(question.id, item.value)}
+                />
+              </View>
+            </View>
+          );
+
         default:
           break;
       }
 
-      return formFieldComponent;
+      return (
+        <View key={index} style={{ marginTop: 5 }}>
+        {index === 0 && (
+          <Text className="text-md font-bold text-white pt-10 font-regular uppercase text-left">
+            {question.section}
+          </Text>
+        )}
+        {formFieldComponent}
+      </View>
+      );
     });
   };
 
@@ -192,10 +258,6 @@ const StepOne = ({ router }) => {
             <Image source={icons.leftcircle} style={{ width: 20, height: 20, marginRight: 8 }} tintColor="#fff" resizeMode="contain" />
             <Image source={images.ichotalogo2} style={{ width: 62, height: 20 }} resizeMode="contain" />
           </View>
-
-          <Text className="text-md text-white pt-10 font-regular uppercase text-left">
-            Section {currentPage} - <Text className="font-extrabold">Personal Details</Text>
-          </Text>
 
           {/* Render form fields */}
           {renderFormFields()}
